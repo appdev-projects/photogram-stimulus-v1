@@ -1,0 +1,21 @@
+<% follow_request = current_user.sent_follow_requests.find_by(recipient: recipient) %>
+<%= turbo_frame_tag dom_id(recipient, :follow_request) do %>
+  <div class="sender_<%= sender.id %>_recipient_<%= recipient.id %>_follow_unfollow">
+    <% unless sender == recipient %>
+
+      <% if follow_request %>
+        <% if follow_request.pending? %>
+          <%= button_to follow_request, method: :delete, class: "btn btn-outline-secondary" do %>
+            Un-request
+          <% end %>
+        <% elsif follow_request.accepted? %>
+          <%= button_to follow_request, method: :delete, class: "btn btn-outline-secondary" do %>
+            Un-follow
+          <% end %>
+        <% end %>
+      <% else %>
+        <%= render "follow_requests/form", follow_request: recipient.received_follow_requests.build %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

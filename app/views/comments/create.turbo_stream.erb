@@ -1,0 +1,7 @@
+<%#= turbo_stream.before dom_id(@comment.photo, :comments_form) do %>
+  <%#= render "comments/comment", comment: @comment %>
+<%# end %>
+
+<%= turbo_stream.update dom_id(@comment.photo, :comments_form) do %>
+  <%= render "comments/form", comment: @comment.photo.comments.build %>
+<% end %>

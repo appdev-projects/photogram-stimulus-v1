@@ -1,0 +1,36 @@
+<%= turbo_frame_tag dom_id(photo) do %>
+  <div class="card">
+    <%= form_with(model: photo, class: "card-body", data: { turbo: photo.persisted? ? true : false}) do |form| %>
+      <% if photo.errors.any? %>
+        <div id="error_explanation">
+          <ul class="list-unstyled">
+            <% photo.errors.each do |error| %>
+              <li>
+                <div class="alert alert-danger" role="alert">
+                  <%= error.full_message %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="form-group">
+        <%= form.label :image %>
+        <%= form.text_field :image, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :caption %>
+        <%= form.text_area :caption, class: "form-control" %>
+      </div>
+
+      <div class="actions d-grid gap-2">
+        <%= form.submit class: "btn btn-outline-primary btn-block" %>
+        <% if photo.persisted? %>
+          <%= link_to "Cancel", photo, class: "btn btn-link link-underline link-underline-opacity-0 link-underline-opacity-100-hover" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,26 @@
+<ul class="nav nav-tabs nav-justified mb-1">    
+  <li class="nav-item">
+    <%=
+      active_link_to user_path(user.username),
+        class: "nav-link",
+        active: :exclusive do %>
+      
+      Posts
+      
+      <span class="badge badge-pill text-bg-secondary">
+        <%= user.own_photos.count %>
+      </span>
+    <% end %>
+  </li>
+
+  <li class="nav-item">
+    <%=
+      active_link_to liked_path(user.username),
+        class: "nav-link" do %>
+
+      Liked
+      
+      <%= render "users/profile_nav/likes_count",  user: user %>
+    <% end %>
+  </li>
+</ul> 
