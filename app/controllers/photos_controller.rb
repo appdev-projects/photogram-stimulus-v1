@@ -1,10 +1,6 @@
 class PhotosController < ApplicationController
   before_action :set_photo, only: %i[ show edit update destroy ]
-
-  # GET /photos or /photos.json
-  def index
-    @photos = Photo.all
-  end
+  before_action :ensure_current_user_is_owner, only: %i[ edit update destroy ]
 
   # GET /photos/1 or /photos/1.json
   def show
@@ -60,7 +56,7 @@ class PhotosController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to photos_path, status: :see_other, notice: "Photo was successfully destroyed." }
+      format.html { redirect_back fallback_location: root_url, status: :see_other, notice: "Photo was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -68,11 +64,17 @@ class PhotosController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_photo
-      @photo = Photo.find(params.expect(:id))
+      @photo = Photo.find(params[:id])
+    end
+
+    def ensure_current_user_is_owner
+      if current_user != @photo.owner
+        redirect_back fallback_location: root_url, alert: "You're not authorized for that."
+      end
     end
 
     # Only allow a list of trusted parameters through.
     def photo_params
-      params.expect(photo: [ :image, :comments_count, :likes_count, :caption, :owner_id ])
+      params.require(:photo).permit(:image, :comments_count, :likes_count, :caption, :owner_id)
     end
 end

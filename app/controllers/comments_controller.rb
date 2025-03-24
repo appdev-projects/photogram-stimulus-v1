@@ -1,19 +1,6 @@
 class CommentsController < ApplicationController
-  before_action :set_comment, only: %i[ show edit update destroy ]
-
-  # GET /comments or /comments.json
-  def index
-    @comments = Comment.all
-  end
-
-  # GET /comments/1 or /comments/1.json
-  def show
-    if params[:frame]
-      render partial: "comment", locals: { comment: @comment }, layout: false
-    else
-      render "show"
-    end
-  end
+  before_action :set_comment, only: %i[ edit update destroy ]
+  before_action :ensure_current_user_is_owner, only: %i[ edit update destroy ]
 
   # GET /comments/new
   def new
@@ -31,7 +18,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-        # format.turbo_stream
+        format.turbo_stream
         format.html { redirect_back_or_to @comment.photo, notice: "Comment was successfully created." }
         format.json { render :show, status: :created, location: @comment }
       else
@@ -68,7 +55,7 @@ class CommentsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_comment
-      @comment = Comment.find(params.expect(:id))
+      @comment = Comment.find(params[:id])
     end
 
     def ensure_current_user_is_owner
@@ -79,6 +66,6 @@ class CommentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def comment_params
-      params.expect(comment: [ :author_id, :photo_id, :body ])
+      params.require(:comment).permit(:author_id, :photo_id, :body)
     end
 end
