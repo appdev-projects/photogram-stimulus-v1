@@ -1,7 +1,7 @@
 <%= turbo_frame_tag dom_id(comment), src: comment_path(comment, frame: true), class: "list-group-item" do %>  
   <li class="list-group-item">
       <div class="media">
-        <%#= image_tag comment.author.avatar_image, class: "rounded-circle mr-2", width: 36 %>
+        <%#= image_tag comment.author.avatar_image_url, class: "rounded-circle mr-2", width: 36 %>
         <span class="rounded-circle" style="width: 36px; height: 36px;"></span>
         <div class="media-body">
           <div class="d-flex align-items-center justify-content-between">
