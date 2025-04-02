@@ -7,6 +7,15 @@ class UsersController < ApplicationController
     @users = @q.result
   end
 
+  def feed
+    @feed = @user.feed.latest.page(params[:page]).per(1)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
+  end
+
   private
 
     def set_user

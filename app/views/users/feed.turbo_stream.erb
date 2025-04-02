@@ -1,0 +1,15 @@
+<%= turbo_stream.append :feed do %>
+  <% @feed.each do |photo| %>
+    <%= render "photos/photo", photo: photo %>
+  <% end %>
+<% end %>
+
+<% unless @feed.out_of_range? %>
+  <%= turbo_stream.replace :next_page do %>
+    <%= turbo_frame_tag :next_page, class: "d-flex justify-content-center", src: feed_path(username: @user.username, page: @feed.next_page, format: :turbo_stream), loading: :lazy do %>
+      <i class="display-1 fa-solid fa-spinner fa-spin-pulse"></i>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove :next_page %>
+<% end %>
